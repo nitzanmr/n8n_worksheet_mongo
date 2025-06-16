@@ -7,7 +7,14 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: [
+        'http://localhost:3000',
+        'http://flutter_backend:3000',
+        // Add any other origins where your Flutter web app runs
+    ],
+    credentials: true
+}));
 app.use(express.json());
 
 // MongoDB connection
@@ -28,9 +35,7 @@ async function connectToMongoDB() {
     db = client.db(DATABASE_NAME);
     collection = db.collection(COLLECTION_NAME);
     
-    // Create indexes for better performance
-    await collection.createIndex({ "combined_at": -1 });
-    await collection.createIndex({ "chatInput": "text" });
+
     
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
